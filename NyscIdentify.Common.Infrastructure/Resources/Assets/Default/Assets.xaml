@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sources="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Sources">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Fonts/Fonts.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <!--#region Portable Network Graphics-->
+    <BitmapImage x:Key="ProductLogo" UriSource="Icons/png/Nysc-Logo.png"/>
+    <BitmapImage x:Key="ExclamationCircle" UriSource="Icons/png/Exclamation Circle.png"/>
+    <!--#endregion-->  
+    
+    <!--#region Scalable Vector Graphics-->
+    <sources:SvgSource x:Key="EyeIcon" Source="Icons/svg/eye.svg"/>
+    <sources:SvgSource x:Key="EyeSlashIcon" Source="Icons/svg/eye-slash.svg"/>
+    <sources:SvgSource x:Key="TimesIcon" Source="Icons/svg/times.svg"/>
+    <sources:SvgSource x:Key="ExclamationCircleIcon" Source="Icons/svg/exclamation-circle.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="ExclamationTriangleIcon" Source="Icons/svg/exclamation-triangle.svg"/>
+    <sources:SvgSource x:Key="CloudIcon" Source="Icons/svg/cloud.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="BackArrowIcon" Source="Icons/svg/back-arrow.svg" Fill="{DynamicResource AuxBrush}"/>
+    <sources:SvgSource x:Key="MapMarkerIcon" Source="Icons/svg/map-marker-alt.svg"/>
+    <sources:SvgSource x:Key="ImagePlaceholderIcon" Source="Icons/svg/image_placeholder.svg"/>
+
+    <sources:SvgSource x:Key="WhiteChevronLeftIcon" Source="Icons/svg/chevron-left.svg" Fill="{DynamicResource AuxForegroundBrush}" />
+    <sources:SvgSource x:Key="WhiteChevronRightIcon" Source="Icons/svg/chevron-right.svg" Fill="{DynamicResource AuxForegroundBrush}" />
+
+    <sources:SvgSource x:Key="ChevronLeftIcon" Source="Icons/svg/chevron-left.svg" />
+    <sources:SvgSource x:Key="ChevronRightIcon" Source="Icons/svg/chevron-right.svg" />
+    
+    
+    <sources:SvgSource x:Key="CircleCheckIcon" Source="Icons/svg/yes.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="WarningTriangleIcon" Source="Icons/svg/warning.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="BlockIcon" Source="Icons/svg/block.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="InfoIcon" Source="Icons/svg/info.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <sources:SvgSource x:Key="WhiteTimesIcon" Source="Icons/svg/times.svg" Fill="{DynamicResource AuxForegroundBrush}"/>
+    <!--
+    <sources:SvgSource x:Key="FolderIcon" Source="Icons/svg/folder_fill.svg" Fill="{DynamicResource AuxBrush}"/>
+    -->
+    <sources:SvgSource x:Key="Folder" Source="Icons/svg/folder.svg"/>
+    <!--#endregion-->
+    
+    <!--#region Images-->
+    <BitmapImage x:Key="NyscCapsRaised" UriSource="Images/nysc-caps-raised.jpg"/>
+    <BitmapImage x:Key="BuhariAndCorpers" UriSource="Images/President Buhari and NYSC-Corpers.jpg"/>
+    <!--#endregion-->
+</ResourceDictionary>

@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="NyscIdentify.Desktop.Views.IdentityTimeline"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:NyscIdentify.Desktop.ViewModels"
+             xmlns:local="clr-namespace:NyscIdentify.Desktop.Views"
+             xmlns:prism="http://prismlibrary.com/" prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, 
+                Type={x:Type vm:IdentityTimelineViewModel}}"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:coreViewModels="clr-namespace:NyscIdentify.Common.Infrastructure.Models.ViewModels;assembly=NyscIdentify.Common.Infrastructure"
+             d:DesignHeight="500" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <i:Interaction.Triggers>
+            <ei:DataTrigger Binding="{Binding RelativeSource={RelativeSource 
+                AncestorType=UserControl}, Path=IsVisible}" Value="True">
+                <prism:InvokeCommandAction Command="{Binding UpdateActivitiesCommand}"/>
+            </ei:DataTrigger>
+            <ei:DataTrigger Binding="{Binding RelativeSource={RelativeSource 
+                AncestorType=UserControl}, Path=IsVisible}" Value="False">
+                <prism:InvokeCommandAction Command="{Binding DisposeTimelineCommand}"/>
+            </ei:DataTrigger>
+        </i:Interaction.Triggers>
+        
+        <ListBox ItemsSource="{Binding Activities}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Left" Margin="0 0 10 0"
+                              TextBlock.Foreground="#000000"
+                              VerticalAlignment="Center">
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="materialDesign:PackIcon">
+                                        <Setter Property="Width" Value="24"/>
+                                        <Setter Property="Height" Value="24"/>
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                            
+                            <materialDesign:PackIcon Kind="AccountPlus" 
+                                                     Visibility="{Binding ActivityType, 
+                                Converter={StaticResource EnumToBoolConverter},
+                                ConverterParameter={x:Static 
+                                coreViewModels:Activity.AccountCreated}}"
+                                                     VerticalAlignment="Center"/>
+
+                            <materialDesign:PackIcon Kind="AccountEdit" 
+                                                     Visibility="{Binding ActivityType, 
+                                Converter={StaticResource EnumToBoolConverter},
+                                ConverterParameter={x:Static 
+                                coreViewModels:Activity.AccountUpdated}}"
+                                                     VerticalAlignment="Center"/>
+
+
+                            <materialDesign:PackIcon Kind="CheckAll" 
+                                                     Visibility="{Binding ActivityType, 
+                                Converter={StaticResource EnumToBoolConverter},
+                                ConverterParameter={x:Static 
+                                coreViewModels:Activity.AccountApproved}}"
+                                                     VerticalAlignment="Center"/>
+
+                            <materialDesign:PackIcon Kind="Cancel" 
+                                                     Visibility="{Binding ActivityType, 
+                                Converter={StaticResource EnumToBoolConverter},
+                                ConverterParameter={x:Static 
+                                coreViewModels:Activity.UpdateRequested}}"
+                                                     VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Margin="0 10 0 0" Text="{Binding Description}" VerticalAlignment="Center" Foreground="{DynamicResource MainForegroundBrush}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <materialDesign:Card Visibility="{Binding IsBusy, 
+            Converter={StaticResource BoolToVisibilityConverter}}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             UniformCornerRadius="20" 
+                             RenderTransformOrigin=".5,.5"
+                             Width="40" Height="40">
+            <ProgressBar Value="{Binding Progress, Mode=OneWay}" 
+                                     IsIndeterminate="True" 
+                                     Style="{StaticResource MaterialDesignCircularProgressBar}" />
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

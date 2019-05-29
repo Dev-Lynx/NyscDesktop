@@ -1,0 +1,660 @@
+﻿<UserControl x:Class="NyscIdentify.Desktop.Views.IdentityView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NyscIdentify.Desktop.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:s="clr-namespace:System.Data;assembly=System.Data"
+             xmlns:vm="clr-namespace:NyscIdentify.Desktop.ViewModels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:core="clr-namespace:NyscIdentify.Common.Infrastructure;assembly=NyscIdentify.Common.Infrastructure"
+             xmlns:coreControls="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Controls;assembly=NyscIdentify.Common.Infrastructure"
+             xmlns:cap="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.AttachedProperties;assembly=NyscIdentify.Common.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:coreBehaviors="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Behaviors;assembly=NyscIdentify.Common.Infrastructure"
+             mc:Ignorable="d"  Name="ParentControl"
+             d:DesignHeight="450" d:DesignWidth="800"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             d:DataContext="{x:Type vm:IdentityViewModel}" Margin="20">
+    <UserControl.Resources>
+
+        <!--#region SearchBox-->
+        <Storyboard x:Key="OpenSearchBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Horizontal)" Storyboard.TargetName="SearchBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="CloseSearchBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Horizontal)" Storyboard.TargetName="SearchBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--#endregion-->
+
+        <!--#region FilterBox-->
+        <Storyboard x:Key="OpenFilterBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Vertical)" Storyboard.TargetName="FilterBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="CloseFilterBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Vertical)" Storyboard.TargetName="FilterBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="FadeInFilterOverlay">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="FilterBoxOverlay">
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#000000"/>
+            </ColorAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="FilterBoxOverlay">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="FadeOutFilterOverlay">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="FilterBoxOverlay">
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#00000000"/>
+            </ColorAnimationUsingKeyFrames>
+
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="FilterBoxOverlay">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--#endregion-->
+        
+        <!--#region SortBox-->
+        <Storyboard x:Key="OpenSortBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Vertical)" Storyboard.TargetName="SortBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="CloseSortBox">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(cap:Directions.Vertical)" Storyboard.TargetName="SortBox">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="FadeInSortOverlay">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="SortBoxOverlay">
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#000000"/>
+            </ColorAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SortBoxOverlay">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="FadeOutSortOverlay">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="SortBoxOverlay">
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#00000000"/>
+            </ColorAnimationUsingKeyFrames>
+
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SortBoxOverlay">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--#endregion-->
+        
+    </UserControl.Resources>
+    <Border BorderBrush="#383838" 
+            BorderThickness=".5" CornerRadius="5 0 0 5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <DockPanel LastChildFill="False" Margin="10 5">
+                <Panel.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Panel.Resources>
+
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        Padding="3 0" DockPanel.Dock="Right"
+                        Name="LayoutToggle" VerticalAlignment="Center" Width="26" Height="26" 
+                        Margin="5 0" Command="{Binding ChangeLayoutCommand}"
+                        ToolTip="{Binding Layout, Converter={StaticResource EnumToStringConverter}}">
+
+                    <Grid>
+                        <materialDesign:PackIcon Kind="ViewList" Width="Auto" Height="25"
+                                                 Visibility="{Binding Layout, Converter={StaticResource EnumToBoolConverter},
+                                                    ConverterParameter={x:Static core:Layout.List}}"/>
+
+                        <materialDesign:PackIcon Kind="ViewGrid" Width="Auto" Height="25"
+                                                Visibility="{Binding Layout, Converter={StaticResource EnumToBoolConverter},
+                                                    ConverterParameter={x:Static core:Layout.Grid}}"/>
+                        <!--
+                        <materialDesign:PackIcon Kind="ViewModule" Width="Auto" Height="25"
+                                                 Visibility="{Binding Layout, Converter={StaticResource EnumToBoolConverter},
+                                                    ConverterParameter={x:Static core:Layout.Card}}"/>
+                        -->
+                    </Grid>
+                </Button>
+
+                <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" 
+                              Name="FilterToggle" DockPanel.Dock="Right" Padding="3 0"
+                              VerticalAlignment="Center" Width="26" Height="26"
+                              Margin="5 0">
+                    <materialDesign:PackIcon Kind="Filter" Width="Auto" Height="25" />
+                </ToggleButton>
+
+                <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" 
+                              Name="SortToggle" DockPanel.Dock="Right" Padding="3 0"
+                              VerticalAlignment="Center" Width="26" Height="26"
+                              Margin="5 0">
+                    <materialDesign:PackIcon Kind="Sort" Width="Auto" Height="25" />
+                </ToggleButton>
+
+
+                <Grid ClipToBounds="True" DockPanel.Dock="Right" MinWidth="200" MaxWidth="300" Margin="5 0">
+                    <TextBox Name="SearchBox" Style="{DynamicResource HalfRoundedTextBox}" 
+                             cap:Directions.Horizontal="1" VerticalAlignment="Center" 
+                             HorizontalAlignment="Stretch" RenderTransformOrigin="0.5,0.5"
+                             Height="25" VerticalContentAlignment="Center"
+                             BorderThickness="1 1 0 1" Text="{Binding Online.SearchQuery, UpdateSourceTrigger=PropertyChanged, Delay=1000}">
+                        <TextBox.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform>
+                                    <TranslateTransform.X>
+                                        <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="x*y">
+                                            <Binding ElementName="SearchBox" Path="ActualWidth"/>
+                                            <Binding ElementName="SearchBox" Path="(cap:Directions.Horizontal)"/>
+                                        </MultiBinding>
+                                    </TranslateTransform.X>
+                                </TranslateTransform>
+                            </TransformGroup>
+                        </TextBox.RenderTransform>
+
+                        <i:Interaction.Triggers>
+                            <ei:DataTrigger Binding="{Binding ElementName=SearchToggle, Path=IsChecked}" Value="True">
+                                <ei:ControlStoryboardAction Storyboard="{StaticResource CloseSearchBox}" ControlStoryboardOption="Stop"/>
+                                <ei:ControlStoryboardAction Storyboard="{StaticResource OpenSearchBox}" ControlStoryboardOption="Play"/>
+                                
+                                <!--
+                                <ei:CallMethodAction TargetObject="{Binding ElementName=SearchBox}" MethodName="Focus" />
+                                -->
+                            </ei:DataTrigger>
+
+                            <ei:DataTrigger Binding="{Binding ElementName=SearchToggle, Path=IsChecked}" Value="False">
+                                <ei:ControlStoryboardAction Storyboard="{StaticResource OpenSearchBox}" ControlStoryboardOption="Stop"/>
+                                <ei:ControlStoryboardAction Storyboard="{StaticResource CloseSearchBox}" ControlStoryboardOption="Play"/>
+                                <ei:ChangePropertyAction PropertyName="Text" Value=""/>
+                            </ei:DataTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+
+                    <Border Background="{DynamicResource MainBrush}" Padding="0 0 1 0"
+                            VerticalAlignment="Center" HorizontalAlignment="Right" CornerRadius="13 0 0 13">
+                        <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                        Name="SearchToggle" Padding="3 0" 
+                        Width="26" Height="26">
+                            <materialDesign:PackIcon Kind="Magnify" Width="Auto" Height="25"/>
+                        </ToggleButton>
+                    </Border>
+                    
+                </Grid>
+
+            </DockPanel>
+
+            <Grid Grid.Row="1" ClipToBounds="True">
+                <ListView AllowDrop="True" ItemsSource="{Binding Online.Data}"
+                          Visibility="{Binding Layout, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static core:Layout.List}}"
+                          SelectedItem="{Binding SelectedIdentity, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+
+                    <i:Interaction.Behaviors>
+                        <coreBehaviors:ItemDoubleClickBehavior/>
+                    </i:Interaction.Behaviors>
+
+                    <ListBox.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ViewIdentityCommand}"/>
+                    </ListBox.InputBindings>
+
+                    <ListView.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+
+                        </ResourceDictionary>
+                    </ListView.Resources>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+                            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}" />
+                            <Setter Property="ContextMenu" Value="{DynamicResource IdentityItemMenu}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource AuxForegroundBrush}" />
+                                    <Setter Property="Background" Value="{DynamicResource AuxBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="2">
+                                <Grid.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DataContext.ViewIdentityCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"/>
+                                </Grid.InputBindings>
+                                
+                                <TextBlock Text="{Binding Name}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="File Number" DisplayMemberBinding="{Binding FileNo}"/>
+                            <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding LastName}"/>
+                            <GridViewColumn Header="Other Names" DisplayMemberBinding="{Binding OtherNames}"/>
+                            <GridViewColumn Header="Gender" DisplayMemberBinding="{Binding Gender}"/>
+                            <GridViewColumn Header="State Of Origin" DisplayMemberBinding="{Binding StateOfOrigin}"/>
+                            <GridViewColumn Header="Rank" DisplayMemberBinding="{Binding Rank}"/>
+                            <GridViewColumn Header="Department" DisplayMemberBinding="{Binding Department}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <ListBox AllowDrop="True" ItemsSource="{Binding Online.Data}" Name="IdentityListBox"
+                         SelectedItem="{Binding SelectedIdentity, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Visibility="{Binding Layout, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static core:Layout.Grid}}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         HorizontalContentAlignment="Stretch">
+
+                    <ListBox.InputBindings>
+                        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ViewIdentityCommand}"/>
+                    </ListBox.InputBindings>
+                    
+                    <i:Interaction.Behaviors>
+                        <coreBehaviors:ItemDoubleClickBehavior/>
+                    </i:Interaction.Behaviors>
+                    
+                    <ListBox.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </ListBox.Resources>
+
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Setter Property="Foreground" Value="{DynamicResource MainForegroundBrush}" />
+                            <Setter Property="ContextMenu" Value="{DynamicResource IdentityItemMenu}" />
+                            <!--
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            -->
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource AuxForegroundBrush}" />
+                                    <Setter Property="Background" Value="{DynamicResource AuxBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" Orientation="Horizontal"
+                                       Margin="10"
+                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource 
+                                AncestorType={x:Type ScrollContentPresenter}, Mode=FindAncestor}}"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border>
+                                <Border.InputBindings>
+                                    <MouseBinding  MouseAction="LeftDoubleClick" Command="{Binding DataContext.ViewIdentityCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                </Border.InputBindings>
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="120"/>
+                                        <RowDefinition Height="40"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Width="100">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="5" Color="#000000" Direction="325" ShadowDepth="1" Opacity=".8"/>
+                                        </Border.Effect>
+
+                                        <coreControls:ResourceViewer UsePlaceholder="True" HighPriority="False"  Resource="{Binding Passport}"/>
+                                    </Border>
+
+
+                                    <TextBlock Text="{Binding FullName, Converter={StaticResource TitleCaseConverter}}" Grid.Row="1" Width="100" 
+                                           TextWrapping="Wrap" Margin="0 5 0 0" TextAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Border Name="FilterBoxOverlay" Background="#00FFFFFF" Visibility="Hidden" Opacity=".3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <ei:ChangePropertyAction TargetName="FilterToggle" PropertyName="IsChecked" Value="False"/>
+                            <prism:InvokeCommandAction Command="{Binding UpdateTableCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Border>
+                
+                <Border Name="FilterBox" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" 
+                        cap:Directions.Vertical="1" MinWidth="600" MinHeight="300" MaxHeight="500">
+                    <Border.Resources>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </Border.Resources>
+
+                    <i:Interaction.Triggers>
+                        <ei:DataTrigger Binding="{Binding ElementName=FilterToggle, Path=IsChecked}" Value="True">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource CloseFilterBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource FadeOutFilterOverlay}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource OpenFilterBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource FadeInFilterOverlay}"/>
+                            <ei:ChangePropertyAction TargetName="SortToggle" PropertyName="IsChecked" Value="False"/>
+                        </ei:DataTrigger>
+                        <ei:DataTrigger Binding="{Binding ElementName=FilterToggle, Path=IsChecked}" Value="False">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource FadeInFilterOverlay}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource OpenFilterBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource CloseFilterBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource FadeOutFilterOverlay}"/>
+                        </ei:DataTrigger>
+                    </i:Interaction.Triggers>
+
+                    <Border.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform>
+                                <TranslateTransform.Y>
+                                    <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="(x*y)">
+                                        <Binding ElementName="FilterBox" Path="ActualHeight"/>
+                                        <Binding ElementName="FilterBox" Path="(cap:Directions.Vertical)"/>
+                                    </MultiBinding>
+                                </TranslateTransform.Y>
+                            </TranslateTransform>
+                        </TransformGroup>
+                    </Border.RenderTransform>
+
+                    <materialDesign:Card Padding="30 10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock VerticalAlignment="Center" Text="Filter" FontSize="50" 
+                                   FontFamily="{DynamicResource RobotoLight}" 
+                                   FontWeight="Thin" Margin="0 10"/>
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding Online.Filters}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0 4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <ComboBox ItemsSource="{Binding ElementName=ParentControl,
+                                                        Path=DataContext.Online.FilterableProperties}"
+                                                        SelectedValue="{Binding Property}" DisplayMemberPath="Name"
+                                                        materialDesign:HintAssist.Hint="Filter By"
+                                                        materialDesign:HintAssist.IsFloating="True"
+                                                        Margin="10 0" VerticalAlignment="Center"/>
+
+                                                <ComboBox Grid.Column="1" ItemsSource="{Binding ElementName=ParentControl,
+                                                        Path=DataContext.Online.FilterOperators}"
+                                                        SelectedValue="{Binding FilterOperator}"
+                                                        materialDesign:HintAssist.Hint="Filter"
+                                                        materialDesign:HintAssist.IsFloating="True"
+                                                        Margin="10 0" VerticalAlignment="Center">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Padding="1 0" Text="{Binding Converter={StaticResource EnumToStringConverter}}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+
+                                                <TextBox Text="{Binding FilterValue, Mode=TwoWay, 
+                                            UpdateSourceTrigger=PropertyChanged}"
+                                                 Grid.Column="2"
+                                                 materialDesign:HintAssist.Hint="Value"
+                                                 materialDesign:HintAssist.IsFloating="True"
+                                                 VerticalAlignment="Center" Margin="10 0"/>
+
+                                                <Button Grid.Column="3" 
+                                                Command="{Binding ElementName=ParentControl, Path=DataContext.RemoveFilterCommand}"
+                                                CommandParameter="{Binding}" Margin="5 0"
+                                                Padding="2 0" VerticalAlignment="Bottom" Height="18">
+                                                    <materialDesign:PackIcon Kind="Close" />
+                                                </Button>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+
+                            <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                Grid.Row="2" Command="{Binding AddFilterCommand}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 20 0 10">
+                                <materialDesign:PackIcon Kind="Plus" />
+                            </Button>
+
+                        </Grid>
+                    </materialDesign:Card>
+                </Border>
+
+                <Border Name="SortBoxOverlay" Background="#00FFFFFF" Visibility="Hidden" Opacity=".3">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <ei:ChangePropertyAction TargetName="SortToggle" PropertyName="IsChecked" Value="False"/>
+                            <prism:InvokeCommandAction Command="{Binding UpdateTableCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Border>
+                
+                <Border Name="SortBox" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" 
+                        cap:Directions.Vertical="1" MinWidth="600" MinHeight="300" MaxHeight="500">
+                    <Border.Resources>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </Border.Resources>
+
+                    <i:Interaction.Triggers>
+                        <ei:DataTrigger Binding="{Binding ElementName=SortToggle, Path=IsChecked}" Value="True">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource CloseSortBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource FadeOutSortOverlay}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource OpenSortBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource FadeInSortOverlay}"/>
+                            <ei:ChangePropertyAction TargetName="FilterToggle" PropertyName="IsChecked" Value="False"/>
+                        </ei:DataTrigger>
+                        <ei:DataTrigger Binding="{Binding ElementName=SortToggle, Path=IsChecked}" Value="False">
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource FadeInSortOverlay}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Stop" Storyboard="{StaticResource OpenSortBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource CloseSortBox}"/>
+                            <ei:ControlStoryboardAction ControlStoryboardOption="Play" Storyboard="{StaticResource FadeOutSortOverlay}"/>
+                        </ei:DataTrigger>
+                    </i:Interaction.Triggers>
+
+                    <Border.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform>
+                                <TranslateTransform.Y>
+                                    <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="(x*y)">
+                                        <Binding ElementName="SortBox" Path="ActualHeight"/>
+                                        <Binding ElementName="SortBox" Path="(cap:Directions.Vertical)"/>
+                                    </MultiBinding>
+                                </TranslateTransform.Y>
+                            </TranslateTransform>
+                        </TransformGroup>
+                    </Border.RenderTransform>
+
+                    <materialDesign:Card Padding="30 10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock VerticalAlignment="Center" Text="Sort" FontSize="50" 
+                                   FontFamily="{DynamicResource RobotoLight}" 
+                                   FontWeight="Thin" Margin="0 10"/>
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding Online.Sorts}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0 4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <ComboBox ItemsSource="{Binding ElementName=ParentControl,
+                                                        Path=DataContext.Online.SortableProperties}"
+                                                        SelectedValue="{Binding Property}" DisplayMemberPath="Name"
+                                                        materialDesign:HintAssist.Hint="Sort By"
+                                                        materialDesign:HintAssist.IsFloating="True"
+                                                        Margin="10 0" VerticalAlignment="Center"/>
+
+                                                <ComboBox Grid.Column="1" ItemsSource="{Binding ElementName=ParentControl,
+                                                        Path=DataContext.Online.SortOperators}"
+                                                        SelectedValue="{Binding SortOperator}"
+                                                        materialDesign:HintAssist.Hint="Sort Order"
+                                                        materialDesign:HintAssist.IsFloating="True"
+                                                        Margin="10 0" VerticalAlignment="Center">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Padding="1 0" Text="{Binding Converter={StaticResource EnumToStringConverter}}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+
+                                                <Button Grid.Column="2" 
+                                                Command="{Binding ElementName=ParentControl, Path=DataContext.RemoveSortCommand}"
+                                                CommandParameter="{Binding}" Margin="5 0"
+                                                Padding="2 0" VerticalAlignment="Bottom" Height="18">
+                                                    <materialDesign:PackIcon Kind="Close" />
+                                                </Button>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+
+
+                            <Button Style="{StaticResource MaterialDesignFloatingActionButton}"
+                                Grid.Row="2" Command="{Binding AddSortCommand}"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 20 0 10">
+                                <materialDesign:PackIcon Kind="Plus" />
+                            </Button>
+
+                        </Grid>
+                    </materialDesign:Card>
+                </Border>
+            </Grid>
+
+
+            <Border BorderBrush="#383838" Background="{DynamicResource MainBrush}" BorderThickness="0 1 0 0"
+                    Grid.Row="2">
+                <Border.Resources>
+                    <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                </Border.Resources>
+                <DockPanel LastChildFill="False" Margin="10 5" >
+                    <Button Style="{StaticResource MaterialDesignFlatButton}" DockPanel.Dock="Left" 
+                              Padding="3 0" VerticalAlignment="Center" Width="26" Height="26"
+                              Margin="5 0" Command="{Binding ForceTableUpdateCommand}">
+                        <coreControls:SpinControl IsBusy="{Binding Online.IsBusy, UpdateSourceTrigger=PropertyChanged}">
+                            <materialDesign:PackIcon Kind="Sync" />
+                        </coreControls:SpinControl>
+                    </Button>
+
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" 
+                                Margin="20 0" VerticalAlignment="Center">
+                            <TextBlock Text="Page Size: " VerticalAlignment="Center"/>
+                            <TextBox MinWidth="30" MaxWidth="50" VerticalAlignment="Center" Padding="0"
+                                 TextAlignment="Center" Margin="5 0 10 4" Text="{Binding Online.PageSize, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
+                                 VerticalContentAlignment="Bottom"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button BorderThickness="0" Style="{DynamicResource TransparentButton}" 
+                            Width="Auto" Height="Auto" Padding="3" Name="PART_PreviousButton"
+                            Margin="10 4" Command="{Binding PreviousPageCommand}"
+                                    IsEnabled="{Binding Online.CanPrevious, Mode=OneWay}">
+                                <coreControls:SvgImage Style="{DynamicResource ClearImage}" 
+                                           SvgSource="{DynamicResource ChevronLeftIcon}"/>
+                            </Button>
+
+                            <TextBlock VerticalAlignment="Center">
+                                <Run Text="{Binding Online.PageNumber, Mode=OneWay}"/>
+                                <Run Text=" / "/>
+                                <Run Text="{Binding Online.PageCount, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <Button BorderThickness="0" Style="{DynamicResource TransparentButton}" 
+                            Width="Auto" Height="Auto" Padding="3" Margin="10 4"
+                                    Command="{Binding NextPageCommand}"
+                                    IsEnabled="{Binding Online.CanNext, Mode=OneWay}">
+                                <coreControls:SvgImage Style="{DynamicResource ClearImage}"
+                                           SvgSource="{DynamicResource ChevronRightIcon}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--
+                        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Text="Page: " VerticalAlignment="Center"/>
+                            <ComboBox MinWidth="25" ItemsSource="{Binding Online.Pages}"
+                                 MaxWidth="60" VerticalAlignment="Center" 
+                                  SelectedValue="{Binding Online.PageNumber, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="5 0 10 4" VerticalContentAlignment="Bottom" 
+                                      HorizontalContentAlignment="Center"
+                                      materialDesign:ComboBoxAssist.ClassicMode="True"
+                                      materialDesign:ComboBoxAssist.ShowSelectedItem="True"/>
+                            <TextBlock Text="/" VerticalAlignment="Center"/>
+                            <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" 
+                                   Text="{Binding Online.PageCount, Mode=OneWay}"/>
+                        </StackPanel>
+                        
+-->
+                    </StackPanel>
+
+
+                    
+                </DockPanel>
+            </Border>
+
+        </Grid>
+    </Border>
+</UserControl>

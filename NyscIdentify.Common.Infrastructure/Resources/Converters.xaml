@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Converters">
+
+    <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
+    <converters:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter"/>
+    <converters:NullableToVisibilityConverter x:Key="InverseNullableToVisibilityConverter" Inverse="True"/>
+    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+    <converters:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+    <converters:EnumToBoolConverter x:Key="InverseEnumToBoolConverter" Inverse="True"/>
+    <converters:MathConverter x:Key="MathConverter"/>
+    <converters:TitleCaseConverter x:Key="TitleCaseConverter"/>
+    <converters:AndBooleanConverter x:Key="AndBooleanConverter"/>
+</ResourceDictionary>

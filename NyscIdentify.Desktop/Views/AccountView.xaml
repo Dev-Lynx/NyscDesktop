@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="NyscIdentify.Desktop.Views.AccountView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NyscIdentify.Desktop.Views"
+             xmlns:prism="http://prismlibrary.com/" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:coreControls="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Controls;assembly=NyscIdentify.Common.Infrastructure"
+             xmlns:vm="clr-namespace:NyscIdentify.Desktop.ViewModels"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance {x:Type vm:AccountViewModel}}"
+             d:DesignHeight="800" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type Control}">
+                <Setter Property="Foreground" Value="#000000"/>
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="#000000"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid>
+            <DockPanel Margin="80">
+                <Border Background="{DynamicResource AuxBrush}" Padding="5" 
+                    Width="80" Height="80" VerticalAlignment="Center"
+                    HorizontalAlignment="Left" DockPanel.Dock="Top">
+                    <TextBlock Foreground="{DynamicResource AuxForegroundBrush}"
+                           Text="{Binding CurrentUser.Initials}" VerticalAlignment="Center"
+                           TextAlignment="Center" FontSize="30"
+                           HorizontalAlignment="Center"/>
+                </Border>
+
+                <TextBlock Text="{Binding CurrentUser.FullName}" 
+                       Foreground="{DynamicResource AuxBrush}"
+                       FontSize="20" DockPanel.Dock="Top"
+                       Margin="0 20 0 0"/>
+
+                <StackPanel HorizontalAlignment="Left" Margin="0 40 0 0">
+                    <Panel.Resources>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </Panel.Resources>
+
+                    <TextBox materialDesign:HintAssist.IsFloating="True" 
+                         materialDesign:HintAssist.Hint="Display Name"
+                         Width="400" Margin="0 20 0 0"
+                         Foreground="#000000" Text="{Binding CurrentUser.DisplayName}"/>
+
+                    <ComboBox materialDesign:HintAssist.Hint="Role" 
+                          materialDesign:HintAssist.IsFloating="True" 
+                          ItemsSource="{Binding UserRoles}" 
+                          SelectedValue="{Binding CurrentUser.Role}"
+                          Margin="0 20 0 0" IsEnabled="False"
+                          Foreground="#000000">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Padding="1 2" Text="{Binding 
+                                Converter={StaticResource EnumToStringConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBox materialDesign:HintAssist.IsFloating="True" 
+                         materialDesign:HintAssist.Hint="Rank"
+                         Margin="0 20 0 0" IsEnabled="False"
+                         Foreground="#000000"
+                         Text="{Binding CurrentUser.Rank}"/>
+
+                    <materialDesign:Card Margin="0 30 0 0"
+                                     Background="{DynamicResource MaterialDesignBackground}">
+                        <Expander Header="Update Password" 
+                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                            <StackPanel Margin="30 10 30 50">
+                                <coreControls:PasswordControl Password="{Binding CurrentPassword, 
+                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              VerticalAlignment="Center" 
+                                              Margin="0 20 0 0" 
+                                              PasswordHint="Current Password"
+                                              Foreground="#000000"/>
+
+                                <coreControls:PasswordControl Password="{Binding NewPassword, 
+                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              VerticalAlignment="Center" 
+                                              Margin="0 20 0 0" 
+                                              PasswordHint="New Password"
+                                              Foreground="#000000"/>
+
+                                <coreControls:PasswordControl Password="{Binding NewPasswordConfirmation, 
+                    Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              VerticalAlignment="Center" 
+                                              Margin="0 20 0 0" 
+                                              PasswordHint="Confirm Password"
+                                              Foreground="#000000"/>
+                            </StackPanel>
+                        </Expander>
+                    </materialDesign:Card>
+
+
+
+                    <Border Background="{DynamicResource DangerBrush}" Grid.Row="3" 
+                                Margin="0 20 0 0" CornerRadius="5" Padding="5 5 5 5"
+                                Visibility="{Binding ErrorMessage, Converter={StaticResource NullableToVisibilityConverter}}">
+                        <DockPanel>
+                            <Image Source="{DynamicResource ExclamationCircle}" Style="{DynamicResource ClearImage}" 
+                                           Width="20" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5 2"/>
+
+                            <TextBlock Text="{Binding ErrorMessage}" FontFamily="{DynamicResource RobotoThin}" FontSize="10" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource AuxForegroundBrush}"/>
+                        </DockPanel>
+                    </Border>
+
+                    <Button Content="Update" Margin="0 30 0 0" Command="{Binding UpdateCommand}"/>
+                </StackPanel>
+            </DockPanel>
+
+            <Border Background="{DynamicResource MainBrush}" Opacity=".5" 
+                Margin="0 0 0 10" Visibility="{Binding IsBusy, 
+            Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <ProgressBar Width="400" Height="400" Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="True" Style="{StaticResource MaterialDesignCircularProgressBar}" />
+                    <TextBlock Text="{Binding BusyMessage}" TextAlignment="Center" Padding="0 30 0 0" Foreground="{DynamicResource AuxBrush}" FontSize="20"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

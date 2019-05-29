@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="RobotoBlack">Roboto-Black.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoBlackItalic">Roboto-BlackItalic.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoBold">Roboto-Bold.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoBoldItalic">Roboto-BoldItalic.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoItalic">Roboto-Italic.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoLight">Roboto-Light.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoLightItalic">Roboto-LightItalic.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoMedium">Roboto-Medium.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoMediumItalic">Roboto-MediumItalic.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoRegular">Roboto-Regular.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoThin">Roboto-Thin.ttf#Roboto</FontFamily>
+    <FontFamily x:Key="RobotoThinItalic">Roboto-ThinItalic.ttf#Roboto</FontFamily>
+</ResourceDictionary>

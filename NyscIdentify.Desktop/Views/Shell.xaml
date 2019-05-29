@@ -1,0 +1,248 @@
+﻿<fluent:RibbonWindow x:Class="NyscIdentify.Desktop.Views.Shell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:local="clr-namespace:NyscIdentify.Desktop"
+        xmlns:vm="clr-namespace:NyscIdentify.Desktop.ViewModels"
+        xmlns:core="clr-namespace:NyscIdentify.Common.Infrastructure;assembly=NyscIdentify.Common.Infrastructure"
+        xmlns:coreControls="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Controls;assembly=NyscIdentify.Common.Infrastructure"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:fluent="urn:fluent-ribbon" VisualBitmapScalingMode="HighQuality"
+        VisualEdgeMode="Aliased" VisualTextRenderingMode="Aliased"
+        xmlns:prism="http://prismlibrary.com/" prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d" WindowState="Maximized" d:DataContext="{x:Type vm:ShellViewModel}"
+        Title="{x:Static core:Core.PRODUCT_NAME}" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <coreControls:IdentityRibbon IsQuickAccessToolBarVisible="False" Opacity=".95">
+            <fluent:Ribbon.ContextualGroups>
+                <fluent:RibbonContextualTabGroup x:Name="IdentityGroup" Header="Identity" 
+                                                 Background="{DynamicResource AuxBrush}" 
+                                                 BorderBrush="{DynamicResource AuxBrush}" 
+                                                 BorderThickness="2"
+                                                 Visibility="{Binding ActiveTab, 
+                    Converter={StaticResource EnumToBoolConverter}, 
+                    ConverterParameter={x:Static core:TabMenu.SingleView}}"/>
+            </fluent:Ribbon.ContextualGroups>
+            <fluent:Ribbon.Menu>
+                <fluent:Backstage Background="{DynamicResource AuxBrush}" 
+                                  Foreground="{DynamicResource AuxForegroundBrush}"
+                                  CanChangeIsOpen="True"
+                                  IsOpen="{Binding BackstageActive, Mode=TwoWay}">
+                    <DockPanel>
+                        <Border Background="{DynamicResource MainBrush}" DockPanel.Dock="Top" Margin="0 20 0 0">
+                            <coreControls:AlertBar Context="{Binding AlertContext, Mode=OneWay}" 
+                                               Template="{DynamicResource AlertBarControlTemplate}"/>    
+                        </Border>
+                        
+
+                        <Border Background="{DynamicResource MainBrush}">
+                            <fluent:BackstageTabControl Foreground="{DynamicResource AuxForegroundBrush}" Background="{DynamicResource MainBrush}">
+                                <fluent:BackstageTabItem Header="Account Settings">
+                                    <ContentControl prism:RegionManager.RegionName="{x:Static core:Core.ACCOUNT_REGION}"/>
+                                </fluent:BackstageTabItem>
+
+                                <fluent:SeparatorTabItem/>
+                                <fluent:Button Header="Sign Out" Command="{Binding SignOutCommand}"/>
+                                <fluent:Button Header="Exit" Command="{Binding ShutdownCommand}"/>
+                            </fluent:BackstageTabControl>
+                        </Border>
+                    </DockPanel>
+                </fluent:Backstage>
+            </fluent:Ribbon.Menu>
+
+            <fluent:RibbonTabItem Header="Home" VerticalContentAlignment="Center" 
+                                  IsSelected="{Binding ActiveTab, 
+                    Converter={StaticResource EnumToBoolConverter}, 
+                    ConverterParameter={x:Static core:TabMenu.Home}, Mode=TwoWay}">
+                <fluent:RibbonGroupBox>
+                    <StackPanel Orientation="Horizontal" >
+                        <Image Margin="0 3 0 0" Style="{DynamicResource ClearImage}" 
+                           Source="{DynamicResource ProductLogo}" Stretch="Uniform"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Height="70"/>
+                    </StackPanel>
+                </fluent:RibbonGroupBox>
+
+                <fluent:RibbonGroupBox Margin="0 8 0 0">
+                    <fluent:Button Header="Open" VerticalContentAlignment="Center"
+                                   Margin="5 0 0 0"
+                                   IsEnabled="{Binding CanViewIdentity}"
+                                   Command="{Binding ViewIdentityCommand}">
+                        <fluent:Button.LargeIcon>
+                            <coreControls:SvgImage SvgSource="{DynamicResource Folder}" 
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   Width="32" Style="{DynamicResource ClearImage}"/>
+                        </fluent:Button.LargeIcon>
+                    </fluent:Button>
+                </fluent:RibbonGroupBox>
+            </fluent:RibbonTabItem>
+
+            <fluent:RibbonTabItem Header="Single View" 
+                                  Group="{Binding Source={x:Reference IdentityGroup}}"
+                                  IsSelected="{Binding ActiveTab, 
+                    Converter={StaticResource EnumToBoolConverter}, 
+                    ConverterParameter={x:Static core:TabMenu.SingleView}, Mode=TwoWay}">
+                <fluent:RibbonGroupBox>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="0 3 0 0" Style="{DynamicResource ClearImage}" 
+                           Source="{DynamicResource ProductLogo}" Stretch="Uniform"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Height="70"/>
+                    </StackPanel>
+                </fluent:RibbonGroupBox>
+            </fluent:RibbonTabItem>
+
+            <fluent:Ribbon.ToolBarItems>
+                <Grid>
+                    <Grid.Resources>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </Grid.Resources>
+
+                    <Popup Name="AccountBarPopup" VerticalOffset="5"
+                           Placement="Bottom" PlacementTarget="{Binding ElementName=AccountBar}"
+                           AllowsTransparency="True" StaysOpen="False" IsOpen="{Binding AccountDetailsActive, Mode=OneWay}">
+                        <materialDesign:Card Margin="15">
+                            <Grid Margin="8" Width="350">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Background="{DynamicResource AuxBrush}" Padding="5" 
+                                                Width="40" Height="40" VerticalAlignment="Center">
+                                            <TextBlock Foreground="{DynamicResource AuxForegroundBrush}"
+                                               Text="{Binding CurrentUser.Initials}" VerticalAlignment="Center"
+                                               TextAlignment="Center" FontSize="22"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1" Margin="10 4">
+                                            <TextBlock FontSize="18" FontWeight="Thin" Margin="0 0 0 2" Text="{Binding CurrentUser.FullName}"/>
+                                            <TextBlock FontSize="14" Margin="0 2" Text="{Binding CurrentUser.Rank, Converter={StaticResource TitleCaseConverter}}" Foreground="{DynamicResource AuxBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <Border BorderThickness="0 1 0 0" BorderBrush="#e8e8e8" Margin="0 10 0 0">
+                                        <Grid Margin="0 5 0 0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                                                    Margin="3 0" Command="{Binding AccountSettingsCommand}">
+                                                ACCOUNT SETTINGS
+                                            </Button>
+
+                                            <Button Grid.Column="1" Margin="3 0"
+                                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                                    Command="{Binding SignOutCommand}">
+                                                SIGN OUT
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Popup>
+
+                    <StackPanel Margin="5 2" Cursor="Hand" Orientation="Horizontal" Name="AccountBar">
+                        <TextBlock VerticalAlignment="Center" Margin="3 0" Text="{Binding CurrentUser.DisplayName}"/>
+                        <Button Style="{DynamicResource TransparentButton}" 
+                        Margin="0 0 10 0" VerticalAlignment="Center">
+                            <Border Background="{DynamicResource AuxBrush}"
+                            Padding="5 3">
+                                <TextBlock Foreground="{DynamicResource AuxForegroundBrush}"
+                                   Text="{Binding CurrentUser.Initials}" VerticalAlignment="Center"
+                                   TextAlignment="Center"/>
+                            </Border>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <prism:InvokeCommandAction Command="{Binding ToggleAccountDetails}"/>
+                                    <!--
+                                    <ei:ChangePropertyAction TargetName="AccountBarPopup"
+                                                             Value="{Binding ElementName=AccountBarPopup, 
+                                        Path=IsOpen, Converter={StaticResource InverseBooleanConverter}}"
+                                                             PropertyName="IsOpen" />
+                                    -->
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </StackPanel>
+
+                    
+
+                    <!--
+                    <materialDesign:PopupBox Margin="8 0" StaysOpen="True">
+                        <Grid Margin="8" Width="300">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Border Background="{DynamicResource AuxBrush}" Padding="5">
+                                        <TextBlock   Foreground="{DynamicResource AuxForegroundBrush}"
+                                       Text="{Binding CurrentUser.Initials}" VerticalAlignment="Center"
+                                       TextAlignment="Center" FontSize="20"/>
+                                    </Border>
+
+                                    <StackPanel Grid.Row="1">
+                                        <TextBlock Text="{Binding CurrentUser.FullName}"/>
+                                        <TextBlock Text="{Binding CurrentUser.Role, Converter={StaticResource EnumToStringConverter}}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Button Style="{DynamicResource MaterialDesignFlatButton}">
+                                    Account Settings
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </materialDesign:PopupBox>
+                    -->
+                    
+                </Grid>
+                
+            </fluent:Ribbon.ToolBarItems>
+        </coreControls:IdentityRibbon>
+
+        <coreControls:AlertBar Context="{Binding AlertContext, Mode=OneWay}" Grid.Row="1" Template="{DynamicResource AlertBarControlTemplate}"/>
+
+        <ContentControl Grid.Row="2" Padding="10" prism:RegionManager.RegionName="{x:Static core:Core.MAIN_REGION}"/>
+
+        <Border Grid.Row="3" Height="25" Background="{DynamicResource AuxBrush}" SnapsToDevicePixels="True">
+            <Border.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Border.Resources>
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" Margin="0 0 10 0" DockPanel.Dock="Right">
+                    <Button VerticalAlignment="Center" Style="{DynamicResource TransparentButton}" Margin="0 0 5 0" Padding="3">
+                        <coreControls:SvgImage SvgSource="{DynamicResource CloudIcon}" Style="{DynamicResource ClearImage}" Width="15"/>
+                    </Button>
+                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AuxForegroundBrush}">
+                        Connected
+                    </TextBlock>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</fluent:RibbonWindow>

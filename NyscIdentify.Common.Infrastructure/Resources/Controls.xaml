@@ -1,0 +1,451 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:controls="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Controls"
+                    xmlns:controlModels="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Controls.Models"
+                    xmlns:converters="clr-namespace:NyscIdentify.Common.Infrastructure.Resources.Converters"
+                    xmlns:core="clr-namespace:NyscIdentify.Common.Infrastructure"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Skins/Default/Skin.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <!--#region Converters-->
+    <BooleanToVisibilityConverter x:Key="ControlsBoolToVisibilityConverter"/>
+    <converters:InverseBoolToVisibilityConverter x:Key="ControlsInverseBoolToVisibilityConverter"/>
+    <converters:InverseBooleanConverter x:Key="ControlsInverseBooleanConverter"/>
+    <converters:EnumToBoolConverter x:Key="ControlsEnumToBoolConverter"/>
+    <converters:AndBooleanConverter x:Key="ControlsAndBooleanConverter"/>
+    <converters:VisibleWhenZeroConverter x:Key="ControlsVisibleWhenZeroConverter"/>
+    <converters:VisibleWhenZeroConverter x:Key="ControlsInverseVisibleWhenZeroConverter" Inverse="True" InvisibiltyType="Collapsed"/>
+    <converters:MathConverter x:Key="ControlsMathConverter"/>
+    <converters:EnumToColorConverter x:Key="ControlsEnumToColorConverter"/>
+    <converters:EqualityToVisibilityConverter x:Key="ControlsEqualityToVisibilityConverter"/>
+    <converters:CountToVisibilityConverter x:Key="ControlsCountToVisibilityConverter" HiddenCount="1"/>
+    <converters:NullableToVisibilityConverter x:Key="ControlsNullableToVisibilityConverter"/>
+
+    <!--#endregion-->
+    
+    
+    <!--#region Custom Styles-->
+    <Style x:Key="ClearImage" TargetType="{x:Type Image}">
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+    </Style>
+    <!--#endregion-->
+    
+    
+    <!--#region Remixed Styles-->
+
+    <!--#region Focus Visual-->
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+    
+    <!--#region ImageButton-->
+
+    <SolidColorBrush x:Key="Button.Static.Background" Color="#00FFFFFF"/>
+    <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="{Binding Source={StaticResource LightAuxBrush}, Path=Color}"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="{Binding Source={StaticResource AuxBrush}, Path=Color}"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+
+    <Style x:Key="ImageButton" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="#00FFFFFF"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Opacity" Value=".5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Opacity" Value=".9"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value=".5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Transparent Button-->
+    <SolidColorBrush x:Key="TransparentButton.MouseOver.Background" Color="#e8e8e8"/>
+    
+    <Style x:Key="TransparentButton" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+        <Setter Property="Foreground" Value="{StaticResource AuxForegroundBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Margin="{TemplateBinding Padding}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Border x:Name="border" Opacity=".4" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" ></Border>
+                    </Grid>
+                    <!--
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    -->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource TransparentButton.MouseOver.Background}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Opacity" Value=".6"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value=".3"/>
+                            <!--
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            -->
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region RoundedTextBox-->
+    <SolidColorBrush x:Key="TextBox.Static.Border" Color="{Binding Source={StaticResource AuxControl}, Path=Background.Color}"/>
+    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="{Binding Source={StaticResource LightAuxControl}, Path=Background.Color}"/>
+    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="{Binding Source={StaticResource AuxControl}, Path=Background.Color}"/>
+    <Style x:Key="HalfRoundedTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{StaticResource MainBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+        <!--
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+        -->
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="AllowDrop" Value="true"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="13">
+                        <ScrollViewer Margin="5 0 0 0" x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                    <Condition Property="IsSelectionActive" Value="false"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+    <!--#endregion-->
+
+    <!--#endregion-->
+    
+    <!--#region Custom Controls-->
+    <ControlTemplate x:Key="PasswordControlTemplate" TargetType="{x:Type controls:PasswordControl}">
+        <Grid>
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="Material.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <PasswordBox x:Name="PasswordBox" material:HintAssist.Hint="{TemplateBinding PasswordHint}" 
+                         material:HintAssist.IsFloating="True" Grid.ColumnSpan="2" 
+                         Visibility="{TemplateBinding ShowPassword, Converter={StaticResource ControlsInverseBoolToVisibilityConverter}}"/>
+
+            <TextBox x:Name="InternalBox" material:HintAssist.Hint="{TemplateBinding PasswordHint}" 
+                     material:HintAssist.IsFloating="True" Grid.ColumnSpan="2" 
+                     Visibility="{TemplateBinding ShowPassword, Converter={StaticResource ControlsBoolToVisibilityConverter}}"/>
+            
+
+            <ToggleButton Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                  IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent},
+                Path=ShowPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    Grid.Column="1" Width="20" Height="20"
+                                    VerticalAlignment="Bottom" Margin="0 0 0 4">
+                <Grid>
+                    <material:PackIcon Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowPassword, Converter={StaticResource ControlsInverseBoolToVisibilityConverter}}" 
+                                       Kind="Eye" Width="17" Height="17"/>
+                    <material:PackIcon Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ShowPassword, Converter={StaticResource ControlsBoolToVisibilityConverter}}"
+                        Kind="EyeOff" Width="17" Height="17"/>
+                </Grid>
+            </ToggleButton> 
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:PasswordControl}">
+        <Setter Property="Template" Value="{DynamicResource PasswordControlTemplate}"/>
+    </Style>
+
+    <Style TargetType="{x:Type controls:SpinControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:SpinControl}">
+                    <ContentPresenter x:Name="PART_Presenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" 
+                                      ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                      RenderTransformOrigin=".5,.5">
+                        <ContentPresenter.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="0"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </ContentPresenter.RenderTransform>
+                    </ContentPresenter>
+
+
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="SpinBoard">
+                            <DoubleAnimationUsingKeyFrames RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Storyboard.TargetName="PART_Presenter">
+                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="360"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="StartSpinBoard" Storyboard="{StaticResource SpinBoard}"/>
+                            </Trigger.EnterActions>
+                        </Trigger>
+
+                        <Trigger Property="IsBusy" Value="True">
+                            <Trigger.EnterActions>
+                                <ResumeStoryboard BeginStoryboardName="StartSpinBoard"/>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <PauseStoryboard BeginStoryboardName="StartSpinBoard"/>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ResourceViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ResourceViewer}">
+                    <ControlTemplate.Resources>
+                        <ResourceDictionary Source="/NyscIdentify.Common.Infrastructure;component/Resources/Material.xaml"/>
+                    </ControlTemplate.Resources>
+                    <Grid Name="ParentPanel">
+                        <Border Width="{Binding ElementName=ParentPanel, Path=ActualWidth}"
+                                Height="{Binding ElementName=ParentPanel, Path=ActualHeight}" 
+                                Background="#FFFFFF" Name="PART_ProgressBorder"
+                                Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Resource.Status, 
+                            Converter={StaticResource ControlsEnumToBoolConverter}, ConverterParameter={x:Static core:RequestStatus.Pending}}">
+
+                            <Grid>
+                                <ProgressBar Name="PART_ProgressBar" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                         Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Resource.Progress}"
+                                         Minimum="0" Maximum="100" VerticalAlignment="Center" IsIndeterminate="True"
+                                         HorizontalAlignment="Center" Visibility="{Binding ElementName=PART_Placeholder,
+                                    Path=IsVisible, Converter={StaticResource ControlsInverseBoolToVisibilityConverter}}">
+                                </ProgressBar>
+
+                                <controls:SvgImage x:Name="PART_Placeholder" SvgSource="{DynamicResource ImagePlaceholderIcon}" Style="{DynamicResource ClearImage}">
+                                    <controls:SvgImage.Visibility>
+                                        <MultiBinding Converter="{StaticResource ControlsAndBooleanConverter}">
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="UsePlaceholder"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Resource.Progress"
+                                                     Converter="{StaticResource ControlsVisibleWhenZeroConverter}"/>
+                                        </MultiBinding>
+                                    </controls:SvgImage.Visibility>
+                                </controls:SvgImage>
+                            </Grid>
+                        </Border>
+
+                        <Border Width="{Binding ElementName=ParentPanel, Path=ActualWidth}"
+                                Height="{Binding ElementName=ParentPanel, Path=ActualHeight}" 
+                                Background="#FFFFFF" Name="PART_FailedBorder"
+                                Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Resource.Status, 
+                            Converter={StaticResource ControlsEnumToBoolConverter}, ConverterParameter={x:Static core:RequestStatus.Failed}}">
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    x:Name="PART_TryAgainButton" ToolTip="Failed to resolve image. Try again.">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="AlertCircleOutline" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Border>
+
+
+                        <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Resource.LocalPath}"
+                               Style="{DynamicResource ClearImage}" Visibility="{Binding ElementName=PART_ProgressBorder,
+                            Path=IsVisible, Converter={StaticResource ControlsInverseBoolToVisibilityConverter}}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="AlertBarControlTemplate" TargetType="{x:Type controls:AlertBar}">
+        <Grid Height="{TemplateBinding Height}" Background="{TemplateBinding Background}">
+            <!--
+             Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                            Path=Context.SelectedAlert.AlertType, 
+            Converter={StaticResource ControlsEnumToColorConverter}}"
+            -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                            Path=Context.Alerts.Count, Converter={StaticResource ControlsCountToVisibilityConverter}}" 
+                    Background="#4B000000"
+                    Margin="0 0 10 0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    
+                    <Button BorderThickness="0" Style="{DynamicResource TransparentButton}" 
+                            Width="Auto" Height="Auto" Padding="3" Name="PART_PreviousButton"
+                            Margin="10 2" Command="{Binding CloseCommand}"
+                            IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent},
+                        Path=Context.CanPrevious}">
+                        <controls:SvgImage Style="{DynamicResource ClearImage}" 
+                                           SvgSource="{DynamicResource WhiteChevronLeftIcon}"/>
+                    </Button>
+
+                    <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AuxForegroundBrush}">
+                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                            Path=Context.SelectedIndex, Converter={StaticResource ControlsMathConverter}, 
+                            ConverterParameter=x+1}"/>
+                        <Run Text=" / "/>
+                        <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                            Path=Context.Alerts.Count, Converter={StaticResource ControlsMathConverter}, 
+                            ConverterParameter=x}"/>
+                    </TextBlock>
+                    
+                    <Button BorderThickness="0" Style="{DynamicResource TransparentButton}" 
+                            Width="Auto" Height="Auto" Padding="3" Name="PART_NextButton"
+                            Margin="10 4"
+                            IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent},
+                        Path=Context.CanNext}">
+                        <controls:SvgImage Style="{DynamicResource ClearImage}"
+                                           SvgSource="{DynamicResource WhiteChevronRightIcon}"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <DockPanel Grid.Column="1" Margin="5 0 0 0">
+
+                <Button BorderThickness="0" Style="{DynamicResource TransparentButton}" 
+                            Width="Auto" Height="Auto" Padding="3" Name="PART_CloseButton"
+                            Margin="10 5" DockPanel.Dock="Right" Visibility="{Binding 
+                    RelativeSource={RelativeSource TemplatedParent}, Path=Context.SelectedAlert.IsClosable, 
+                    Converter={StaticResource ControlsBoolToVisibilityConverter}}">
+                    <controls:SvgImage SvgSource="{DynamicResource WhiteTimesIcon}" Width="13"/>
+                </Button>
+                
+                <Grid Name="PART_AlertIcon" Margin="3" VerticalAlignment="Center" 
+                      Width="16" DockPanel.Dock="Left"
+                      Visibility="{Binding 
+                        RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                        Path=Context.SelectedAlert, Converter={StaticResource ControlsNullableToVisibilityConverter}}">
+                    
+                    <controls:SvgImage SvgSource="{DynamicResource CircleCheckIcon}" Visibility="{Binding 
+                        RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                        Path=Context.SelectedAlert.AlertType, Converter={StaticResource 
+                        ControlsEnumToBoolConverter}, 
+                        ConverterParameter={x:Static controlModels:AlertType.Success}}"/>
+
+                    <controls:SvgImage SvgSource="{DynamicResource InfoIcon}" Visibility="{Binding 
+                        RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                        Path=Context.SelectedAlert.AlertType, Converter={StaticResource 
+                        ControlsEnumToBoolConverter}, 
+                        ConverterParameter={x:Static controlModels:AlertType.Information}}"/>
+
+                    <controls:SvgImage SvgSource="{DynamicResource WarningTriangleIcon}" Visibility="{Binding 
+                        RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                        Path=Context.SelectedAlert.AlertType, Converter={StaticResource 
+                        ControlsEnumToBoolConverter}, 
+                        ConverterParameter={x:Static controlModels:AlertType.Warning}}"/>
+
+                    <controls:SvgImage SvgSource="{DynamicResource BlockIcon}" Visibility="{Binding 
+                        RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                        Path=Context.SelectedAlert.AlertType, Converter={StaticResource 
+                        ControlsEnumToBoolConverter}, 
+                        ConverterParameter={x:Static controlModels:AlertType.Error}}"/>
+                </Grid>
+
+                
+                <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay,
+                    Path=Context.SelectedAlert.Message}"
+                       Foreground="{DynamicResource AuxForegroundBrush}"
+                       VerticalAlignment="Center" Margin="5 0 0 0"/>    
+            </DockPanel>
+            
+        </Grid>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type controls:AlertBar}">
+        <Setter Property="Template" Value="{StaticResource AlertBarControlTemplate}"/>
+    </Style>
+
+
+    <!--#endregion-->
+    
+    
+</ResourceDictionary>
